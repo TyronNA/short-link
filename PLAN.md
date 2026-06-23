@@ -4,7 +4,11 @@
 
 ## Trạng thái hiện tại
 
-Đã lỡ tạo code dùng **BoltDB + hash 6-ký-tự**. Quyết định đã chốt là **SQLite + counter + Feistel obfuscation → base62(6)**. → Phải viết lại `store`, `shortener`, và cập nhật handler/tests/docs cho khớp.
+**Đã hoàn thành Bước 1–6.** Code đúng thiết kế chốt (SQLite + counter + Feistel → base62(6)):
+`internal/shortener`, `internal/store`, `internal/handler` (+ `router.go`), `cmd/server`, và
+`internal/e2e`. `go build` / `go vet` / `go test -race ./...` đều xanh; coverage `internal/*`
+≥85%. README/RUNNING/Dockerfile/Makefile/.env.example đã viết. Các commit nằm trên `master`
+(chưa push). Còn lại: Bước 7 (push GitHub), Bước 8 (deploy), Bước 9 (email nộp bài).
 
 ## Các bước (theo thứ tự, mỗi bước build + test xanh trước khi sang bước sau)
 

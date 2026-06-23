@@ -56,6 +56,10 @@ consumer-side `Store` interface, not a concrete type.
 
 ## Current status
 
-Planning is fully locked and committed (`docs: lock requirements...`). The earlier
-exploratory code (BoltDB + hash) was removed. **Implementation has not started** — begin at
-PLAN.md Step 1 (scaffold + deps), then Step 2 (shortener Feistel).
+**Implementation complete (PLAN.md Steps 1–6).** Code lives in `cmd/server` and
+`internal/{shortener,store,handler,e2e}` exactly as designed (SQLite + Feistel → base62(6)).
+`go build`, `go vet`, and `go test -race ./...` are all green; `internal/*` coverage ≥85%.
+README/RUNNING/Dockerfile/Makefile/.env.example are written.
+
+Remaining: **Step 7** push to GitHub (commits are on `master`, not yet pushed — remote URL
+needs confirming), **Step 8** deploy to a free server, **Step 9** draft the submission email.
