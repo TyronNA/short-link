@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO -->
+  <title>ShortLink — Fast, Free URL Shortener</title>
+  <meta name="description" content="Shorten long URLs into clean 6-character links, and decode them back to the original. Free, fast, no sign-up." />
+  <link rel="canonical" href="https://short-link.fun/" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0b1020" />
+
+  <!-- Open Graph / social share -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ShortLink — Fast, Free URL Shortener" />
+  <meta property="og:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original." />
+  <meta property="og:url" content="https://short-link.fun/" />
+  <meta property="og:site_name" content="ShortLink" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="ShortLink — Fast, Free URL Shortener" />
+  <meta name="twitter:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original." />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
+
+  <!-- Structured data for richer search results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ShortLink",
+    "url": "https://short-link.fun/",
+    "applicationCategory": "Utility",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "Free URL shortener: shorten long URLs into 6-character links and decode them back."
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #141b33;
+      --panel-2: #1b2444;
+      --text: #e7ecf7;
+      --muted: #93a0c0;
+      --accent: #6ea8fe;
+      --accent-2: #59e0b0;
+      --border: #283357;
+      --danger: #ff7a8a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 50% -10%, #16213f 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 64px 20px 80px;
+    }
+    header { text-align: center; margin-bottom: 40px; }
+    h1 { font-size: 2.2rem; margin: 0 0 8px; letter-spacing: -0.02em; }
+    h1 .mark { color: var(--accent); }
+    header p { color: var(--muted); margin: 0; font-size: 1.05rem; }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .card h2 { font-size: 1.05rem; margin: 0 0 14px; color: var(--text); }
+
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    input[type="url"], input[type="text"] {
+      flex: 1 1 240px;
+      min-width: 0;
+      background: #0d1430;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 1rem;
+    }
+    input:focus { outline: none; border-color: var(--accent); }
+    button {
+      background: var(--accent);
+      color: #06122e;
+      font-weight: 600;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+    button:hover { filter: brightness(1.08); }
+    button:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .result {
+      margin-top: 16px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: #0d1430;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      word-break: break-all;
+    }
+    .result.show { display: flex; }
+    .result a { color: var(--accent-2); text-decoration: none; flex: 1; }
+    .result a:hover { text-decoration: underline; }
+    .copy {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      flex: 0 0 auto;
+    }
+    .error { color: var(--danger); margin-top: 12px; font-size: 0.9rem; display: none; }
+    .error.show { display: block; }
+
+    footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 36px; }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1><span class="mark">🔗</span> Short<span class="mark">Link</span></h1>
+      <p>Turn long URLs into clean 6-character links — and back again.</p>
+    </header>
+
+    <section class="card" aria-labelledby="encode-title">
+      <h2 id="encode-title">Shorten a URL</h2>
+      <form id="encode-form" class="row">
+        <input type="url" id="encode-input" placeholder="https://example.com/very/long/path" required autocomplete="off" />
+        <button type="submit" id="encode-btn">Shorten</button>
+      </form>
+      <div class="result" id="encode-result">
+        <a id="encode-link" href="#" target="_blank" rel="noopener"></a>
+        <button class="copy" id="encode-copy" type="button">Copy</button>
+      </div>
+      <div class="error" id="encode-error"></div>
+    </section>
+
+    <section class="card" aria-labelledby="decode-title">
+      <h2 id="decode-title">Expand a short link</h2>
+      <form id="decode-form" class="row">
+        <input type="text" id="decode-input" placeholder="https://api.short-link.fun/GeAi9K" required autocomplete="off" />
+        <button type="submit" id="decode-btn">Expand</button>
+      </form>
+      <div class="result" id="decode-result">
+        <a id="decode-link" href="#" target="_blank" rel="noopener"></a>
+        <button class="copy" id="decode-copy" type="button">Copy</button>
+      </div>
+      <div class="error" id="decode-error"></div>
+    </section>
+
+    <footer>
+      <p>Free &amp; open. API at <code>api.short-link.fun</code> · <a href="https://github.com/TyronNA/short-link" rel="noopener">Source</a></p>
+    </footer>
+  </main>
+
+  <script>
+    // API base. Override at deploy time if the API host changes.
+    const API_BASE = "https://api.short-link.fun";
+
+    async function callJSON(path, body) {
+      const res = await fetch(API_BASE + path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      let data = {};
+      try { data = await res.json(); } catch (_) {}
+      if (!res.ok) throw new Error(data.error || ("request failed (" + res.status + ")"));
+      return data;
+    }
+
+    function show(el) { el.classList.add("show"); }
+    function hide(el) { el.classList.remove("show"); }
+
+    function wire(formId, btnId, inputId, resultId, linkId, copyId, errId, run) {
+      const form = document.getElementById(formId);
+      const btn = document.getElementById(btnId);
+      const input = document.getElementById(inputId);
+      const result = document.getElementById(resultId);
+      const link = document.getElementById(linkId);
+      const copy = document.getElementById(copyId);
+      const err = document.getElementById(errId);
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        hide(result); hide(err); err.textContent = "";
+        btn.disabled = true;
+        try {
+          const url = await run(input.value.trim());
+          link.href = url;
+          link.textContent = url;
+          show(result);
+        } catch (ex) {
+          err.textContent = ex.message;
+          show(err);
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(link.textContent);
+          copy.textContent = "Copied";
+          setTimeout(() => (copy.textContent = "Copy"), 1500);
+        } catch (_) {}
+      });
+    }
+
+    wire("encode-form", "encode-btn", "encode-input", "encode-result", "encode-link", "encode-copy", "encode-error",
+      async (url) => (await callJSON("/encode", { url })).short_url);
+
+    wire("decode-form", "decode-btn", "decode-input", "decode-result", "decode-link", "decode-copy", "decode-error",
+      async (shortURL) => (await callJSON("/decode", { short_url: shortURL })).original_url);
+  </script>
+</body>
+</html>
