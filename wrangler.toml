@@ -1,5 +1,16 @@
 name = "short-link"
+main = "src/index.js"
 compatibility_date = "2026-06-23"
 
+# Static landing page (web/index.html) is served via the ASSETS binding.
 [assets]
 directory = "./web"
+binding = "ASSETS"
+not_found_handling = "404-page"   # serve web/404.html for unknown paths
+
+# Bind the Worker to the apex as a Custom Domain. On `wrangler deploy`,
+# Cloudflare creates the proxied DNS record and issues the edge cert
+# automatically — do NOT also add an A record by hand.
+routes = [
+  { pattern = "short-link.fun", custom_domain = true }
+]
