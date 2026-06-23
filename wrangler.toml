@@ -1,5 +1,5 @@
 name = "short-link"
-main = "src/index.js"
+main = "web/index.js"
 compatibility_date = "2026-06-23"
 
 # Static landing page (web/index.html) is served via the ASSETS binding.
