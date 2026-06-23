@@ -1,0 +1,36 @@
+# ShortLink — isolated deployment on the shared VPS.
+#
+# Runs as its OWN compose project ("shortlink"), separate from the game stack
+# in /opt/mgho/deploy. It only joins the game's existing bridge network
+# (deploy_default, declared external below) so the game's Caddy can reach this
+# container by name — it does NOT publish any host port and does NOT touch any
+# game container, volume, or config.
+services:
+  shortlink:
+    build:
+      context: ..              # repo root (has Dockerfile, cmd/, internal/)
+      dockerfile: Dockerfile
+    image: shortlink:latest
+    container_name: shortlink
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - shortlink_data:/data        # SQLite file persists across restarts (R6)
+    networks:
+      - web
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+# Join the game's pre-existing network so mgho-caddy can do
+# `reverse_proxy shortlink:8080`. external:true means compose will NOT create or
+# remove it — it belongs to the game project.
+networks:
+  web:
+    external: true
+    name: deploy_default
+
+volumes:
+  shortlink_data:

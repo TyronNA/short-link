@@ -1,0 +1,13 @@
+# Append this block to the game's Caddyfile (/opt/mgho/deploy/Caddyfile).
+# Additive only — does not modify the existing api.mongtienhiep.vn block.
+# Requires: DNS A api.short-link.fun -> VPS IP (grey cloud) so the HTTP-01
+# ACME challenge can reach Caddy on :80. Apply with a graceful reload:
+#   docker exec mgho-caddy caddy reload --config /etc/caddy/Caddyfile
+
+api.short-link.fun {
+	encode gzip zstd
+	reverse_proxy shortlink:8080 {
+		header_up X-Real-IP {remote}
+		header_up X-Forwarded-Proto https
+	}
+}
