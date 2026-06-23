@@ -1,0 +1,44 @@
+# Binaries
+/shortlink
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries / coverage
+*.test
+*.out
+coverage.*
+
+# Go build/test cache, vendor
+/vendor/
+go.work
+go.work.sum
+
+# SQLite data files (runtime)
+*.db
+*.db-shm
+*.db-wal
+/data/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Claude Code personal/local settings
+.claude/settings.local.json
