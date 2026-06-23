@@ -7,6 +7,13 @@ compatibility_date = "2026-06-23"
 directory = "./web"
 binding = "ASSETS"
 not_found_handling = "404-page"   # serve web/404.html for unknown paths
+# Run the Worker on EVERY request, before the static-asset layer. Without this,
+# Cloudflare's asset edge cache can serve a stale 404.html for a code path
+# (cf-cache-status: HIT, no cfWorker in server-timing) and short-circuit the
+# Worker entirely — so the Worker's no-store never applies and even a zone
+# "Purge Everything" (which does not clear the Workers Assets cache) won't fix
+# it. With run_worker_first the Worker always runs and resolves the code live.
+run_worker_first = true
 
 # Bind the Worker to the apex as a Custom Domain. On `wrangler deploy`,
 # Cloudflare creates the proxied DNS record and issues the edge cert
