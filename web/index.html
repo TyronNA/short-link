@@ -20,9 +20,14 @@
   <meta property="og:url" content="https://short-link.fun/" />
   <meta property="og:site_name" content="ShortLink" />
   <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://short-link.fun/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ShortLink — fast, free URL shortener" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="ShortLink — Fast, Free URL Shortener" />
   <meta name="twitter:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original." />
+  <meta name="twitter:image" content="https://short-link.fun/assets/og-image.png" />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
 
@@ -210,6 +215,41 @@
             <p>Visiting the short link redirects instantly. Paste it back to decode the original URL.</p>
           </li>
         </ol>
+      </div>
+    </section>
+
+    <!-- ===== About / SEO content ===== -->
+    <section id="about" class="block">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">About</span>
+          <h2 class="section-title">What is a URL shortener?</h2>
+        </div>
+        <div class="prose">
+          <p>A <strong>URL shortener</strong> turns a long, unwieldy web address into a short link that is
+            easier to share, type, and remember. ShortLink takes any valid URL and returns a clean
+            6-character code such as <code>short-link.fun/GeAi9K</code>. Open that link and you are
+            redirected straight to the original page — no redirects through ad pages, no interstitials.</p>
+
+          <h3>When short links are useful</h3>
+          <ul>
+            <li><strong>Social posts &amp; bios</strong> — fit a tidy link into a character-limited tweet or profile.</li>
+            <li><strong>Messages &amp; email</strong> — paste a link that won't wrap or break across lines.</li>
+            <li><strong>Print &amp; slides</strong> — a 6-character code is far easier to read aloud or retype than a long path.</li>
+            <li><strong>APIs &amp; tools</strong> — store compact identifiers instead of full URLs.</li>
+          </ul>
+
+          <h3>Why ShortLink instead of another shortener?</h3>
+          <p>ShortLink is <strong>free, requires no sign-up, and adds no tracking</strong>. Links never expire,
+            and the same URL always returns the same short code. Codes are produced by a reversible Feistel
+            permutation over base62, so they are short, non-sequential, and never collide — and any link can be
+            decoded back to its original URL. The entire service is
+            <a href="https://github.com/TyronNA/short-link" rel="noopener">open source</a>, so you can audit
+            or self-host it.</p>
+
+          <p>Ready to try it? <a href="#tool">Shorten your first URL above</a> or read the
+            <a href="/faq">frequently asked questions</a>.</p>
+        </div>
       </div>
     </section>
   </main>

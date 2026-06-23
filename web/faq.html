@@ -16,7 +16,14 @@
   <meta property="og:url" content="https://short-link.fun/faq" />
   <meta property="og:site_name" content="ShortLink" />
   <meta property="og:locale" content="en_US" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:image" content="https://short-link.fun/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ShortLink — fast, free URL shortener" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FAQ — ShortLink URL Shortener" />
+  <meta name="twitter:description" content="Answers about pricing, link expiry, privacy, short-code generation, and the ShortLink API." />
+  <meta name="twitter:image" content="https://short-link.fun/assets/og-image.png" />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
   <link rel="stylesheet" href="assets/app.css" />
@@ -32,6 +39,18 @@
       { "@type": "Question", "name": "Do you track or sell my data?", "acceptedAnswer": { "@type": "Answer", "text": "No. We do not require an account, do not run third-party trackers, and do not sell data. Only the URL and its generated code are stored." } },
       { "@type": "Question", "name": "How are short codes generated?", "acceptedAnswer": { "@type": "Answer", "text": "Each URL gets a sequential ID that is run through a reversible Feistel permutation and encoded as a 6-character base62 code. Codes are non-sequential and never collide." } },
       { "@type": "Question", "name": "Is there an API?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. POST /encode and POST /decode accept and return JSON at api.short-link.fun." } }
+    ]
+  }
+  </script>
+
+  <!-- Breadcrumb structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://short-link.fun/" },
+      { "@type": "ListItem", "position": 2, "name": "FAQ", "item": "https://short-link.fun/faq" }
     ]
   }
   </script>
