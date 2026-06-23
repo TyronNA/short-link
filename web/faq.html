@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>FAQ — ShortLink URL Shortener</title>
+  <meta name="description" content="Frequently asked questions about ShortLink: pricing, link expiry, privacy, how short codes are generated, and the API." />
+  <link rel="canonical" href="https://short-link.fun/faq" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#0b1020" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FAQ — ShortLink URL Shortener" />
+  <meta property="og:description" content="Answers about pricing, link expiry, privacy, short-code generation, and the ShortLink API." />
+  <meta property="og:url" content="https://short-link.fun/faq" />
+  <meta property="og:site_name" content="ShortLink" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
+  <link rel="stylesheet" href="assets/app.css" />
+
+  <!-- FAQPage structured data (rich results) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "Is ShortLink free to use?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. ShortLink is completely free with no sign-up and no account." } },
+      { "@type": "Question", "name": "Do short links expire?", "acceptedAnswer": { "@type": "Answer", "text": "No. Links are stored persistently and keep redirecting to the original URL as long as the service runs." } },
+      { "@type": "Question", "name": "Do you track or sell my data?", "acceptedAnswer": { "@type": "Answer", "text": "No. We do not require an account, do not run third-party trackers, and do not sell data. Only the URL and its generated code are stored." } },
+      { "@type": "Question", "name": "How are short codes generated?", "acceptedAnswer": { "@type": "Answer", "text": "Each URL gets a sequential ID that is run through a reversible Feistel permutation and encoded as a 6-character base62 code. Codes are non-sequential and never collide." } },
+      { "@type": "Question", "name": "Is there an API?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. POST /encode and POST /decode accept and return JSON at api.short-link.fun." } }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#faq">Skip to FAQ</a>
+
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="badge" aria-hidden="true">🔗</span>
+        Short<span class="mark">Link</span>
+      </a>
+      <div class="nav-links">
+        <a class="hide-sm" href="/#features">Features</a>
+        <a class="hide-sm" href="/#how">How it works</a>
+        <a href="/faq">FAQ</a>
+        <a class="ghbtn" href="https://github.com/TyronNA/short-link" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <header class="page-head wrap">
+      <p class="breadcrumb"><a href="/">Home</a> › FAQ</p>
+      <h1>Frequently asked questions</h1>
+      <p>Everything you might want to know about ShortLink.</p>
+    </header>
+
+    <section id="faq" class="block">
+      <div class="wrap faq">
+        <details open>
+          <summary>Is ShortLink free to use? <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+          <p>Yes — completely free, with no sign-up and no account.</p>
+        </details>
+        <details>
+          <summary>Do short links expire? <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+          <p>No. Links are stored persistently and keep redirecting to the original URL as long as the service runs.</p>
+        </details>
+        <details>
+          <summary>Do you track or sell my data? <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+          <p>No. There's no account, no third-party trackers, and we don't sell data. Only the URL and its generated code are stored. See our <a href="/privacy">Privacy Policy</a>.</p>
+        </details>
+        <details>
+          <summary>How are short codes generated? <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+          <p>Each URL gets a sequential ID, which is run through a reversible Feistel permutation and encoded as a 6-character base62 code. Codes are non-sequential and never collide.</p>
+        </details>
+        <details>
+          <summary>Is there an API? <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></summary>
+          <p><code>POST /encode</code> and <code>POST /decode</code> accept and return JSON at <code>api.short-link.fun</code>. See the <a href="https://github.com/TyronNA/short-link" rel="noopener">GitHub README</a> for request/response details.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <nav class="foot-links" aria-label="Footer">
+        <a href="/#features">Features</a>
+        <a href="/#how">How it works</a>
+        <a href="/faq">FAQ</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="https://github.com/TyronNA/short-link" rel="noopener">GitHub</a>
+      </nav>
+      <p class="meta">Free &amp; open source. API at <code>api.short-link.fun</code> · © 2026 ShortLink</p>
+    </div>
+  </footer>
+</body>
+</html>

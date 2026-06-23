@@ -4,231 +4,230 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- SEO -->
-  <title>ShortLink — Fast, Free URL Shortener</title>
-  <meta name="description" content="Shorten long URLs into clean 6-character links, and decode them back to the original. Free, fast, no sign-up." />
+  <!-- SEO: primary -->
+  <title>ShortLink — Fast, Free URL Shortener (No Sign-up)</title>
+  <meta name="description" content="Shorten long URLs into clean 6-character links and decode them back to the original. Free, fast, privacy-friendly, no sign-up or tracking." />
   <link rel="canonical" href="https://short-link.fun/" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#0b1020" />
+  <meta name="author" content="ShortLink" />
+  <meta name="keywords" content="url shortener, short link, link shortener, free url shortener, shorten url, decode short link" />
 
   <!-- Open Graph / social share -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ShortLink — Fast, Free URL Shortener" />
-  <meta property="og:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original." />
+  <meta property="og:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original. Free, fast, no sign-up." />
   <meta property="og:url" content="https://short-link.fun/" />
   <meta property="og:site_name" content="ShortLink" />
+  <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="ShortLink — Fast, Free URL Shortener" />
   <meta name="twitter:description" content="Shorten long URLs into clean 6-character links, and decode them back to the original." />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>" />
 
-  <!-- Structured data for richer search results -->
+  <!-- Perf: warm up the API connection early -->
+  <link rel="preconnect" href="https://api.short-link.fun" crossorigin />
+  <link rel="dns-prefetch" href="https://api.short-link.fun" />
+
+  <link rel="stylesheet" href="assets/app.css" />
+
+  <!-- Structured data: app + org -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "ShortLink",
-    "url": "https://short-link.fun/",
-    "applicationCategory": "Utility",
-    "operatingSystem": "Any",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "Free URL shortener: shorten long URLs into 6-character links and decode them back."
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "ShortLink",
+        "url": "https://short-link.fun/",
+        "applicationCategory": "Utility",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "description": "Free URL shortener: shorten long URLs into 6-character links and decode them back."
+      },
+      {
+        "@type": "Organization",
+        "name": "ShortLink",
+        "url": "https://short-link.fun/",
+        "sameAs": ["https://github.com/TyronNA/short-link"]
+      }
+    ]
   }
   </script>
-
-  <style>
-    :root {
-      --bg: #0b1020;
-      --panel: #141b33;
-      --panel-2: #1b2444;
-      --text: #e7ecf7;
-      --muted: #93a0c0;
-      --accent: #6ea8fe;
-      --accent-2: #59e0b0;
-      --border: #283357;
-      --danger: #ff7a8a;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -10%, #16213f 0%, var(--bg) 60%);
-      color: var(--text);
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-    main {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 64px 20px 80px;
-    }
-    header { text-align: center; margin-bottom: 40px; }
-    h1 { font-size: 2.2rem; margin: 0 0 8px; letter-spacing: -0.02em; }
-    h1 .mark { color: var(--accent); }
-    header p { color: var(--muted); margin: 0; font-size: 1.05rem; }
-
-    .card {
-      background: linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-    .card h2 { font-size: 1.05rem; margin: 0 0 14px; color: var(--text); }
-
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    input[type="url"], input[type="text"] {
-      flex: 1 1 240px;
-      min-width: 0;
-      background: #0d1430;
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 12px 14px;
-      font-size: 1rem;
-    }
-    input:focus { outline: none; border-color: var(--accent); }
-    button {
-      background: var(--accent);
-      color: #06122e;
-      font-weight: 600;
-      border: 0;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: filter 0.15s ease;
-    }
-    button:hover { filter: brightness(1.08); }
-    button:disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .result {
-      margin-top: 16px;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      background: #0d1430;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 14px;
-      word-break: break-all;
-    }
-    .result.show { display: flex; }
-    .result a { color: var(--accent-2); text-decoration: none; flex: 1; }
-    .result a:hover { text-decoration: underline; }
-    .copy {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 6px 12px;
-      font-size: 0.85rem;
-      flex: 0 0 auto;
-    }
-    .error { color: var(--danger); margin-top: 12px; font-size: 0.9rem; display: none; }
-    .error.show { display: block; }
-
-    footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 36px; }
-    footer a { color: var(--muted); }
-  </style>
 </head>
 <body>
-  <main>
-    <header>
-      <h1><span class="mark">🔗</span> Short<span class="mark">Link</span></h1>
-      <p>Turn long URLs into clean 6-character links — and back again.</p>
-    </header>
+  <a class="skip-link" href="#tool">Skip to the shortener</a>
 
-    <section class="card" aria-labelledby="encode-title">
-      <h2 id="encode-title">Shorten a URL</h2>
-      <form id="encode-form" class="row">
-        <input type="url" id="encode-input" placeholder="https://example.com/very/long/path" required autocomplete="off" />
-        <button type="submit" id="encode-btn">Shorten</button>
-      </form>
-      <div class="result" id="encode-result">
-        <a id="encode-link" href="#" target="_blank" rel="noopener"></a>
-        <button class="copy" id="encode-copy" type="button">Copy</button>
+  <nav class="nav" aria-label="Primary">
+    <div class="nav-inner">
+      <a class="brand" href="/">
+        <span class="badge" aria-hidden="true">🔗</span>
+        Short<span class="mark">Link</span>
+      </a>
+      <div class="nav-links">
+        <a class="hide-sm" href="#features">Features</a>
+        <a class="hide-sm" href="#how">How it works</a>
+        <a href="/faq">FAQ</a>
+        <a class="ghbtn" href="https://github.com/TyronNA/short-link" rel="noopener">GitHub</a>
       </div>
-      <div class="error" id="encode-error"></div>
+    </div>
+  </nav>
+
+  <main id="top">
+    <!-- ===== Hero + Tool ===== -->
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <span class="logo-mark" aria-hidden="true">🔗</span>
+      <h1 id="hero-title">Short<span class="mark">Link</span></h1>
+      <p class="sub">Turn long URLs into clean 6-character links — and back again. Free, fast, and no sign-up.</p>
+      <div class="pills">
+        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> No account needed</span>
+        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> No tracking</span>
+        <span class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Links never expire</span>
+      </div>
     </section>
 
-    <section class="card" aria-labelledby="decode-title">
-      <h2 id="decode-title">Expand a short link</h2>
-      <form id="decode-form" class="row">
-        <input type="text" id="decode-input" placeholder="https://api.short-link.fun/GeAi9K" required autocomplete="off" />
-        <button type="submit" id="decode-btn">Expand</button>
-      </form>
-      <div class="result" id="decode-result">
-        <a id="decode-link" href="#" target="_blank" rel="noopener"></a>
-        <button class="copy" id="decode-copy" type="button">Copy</button>
+    <div id="tool" class="tool wrap">
+      <section class="card" aria-labelledby="encode-title">
+        <h2 class="card-title" id="encode-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Shorten a URL
+        </h2>
+        <form id="encode-form" class="row">
+          <input type="url" id="encode-input" placeholder="https://example.com/very/long/path" required autocomplete="off" inputmode="url" aria-label="Long URL to shorten" />
+          <button type="submit" id="encode-btn" class="submit">
+            <span class="label">Shorten</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+        <div class="result" id="encode-result" role="status" aria-live="polite">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <a id="encode-link" href="#" target="_blank" rel="noopener"></a>
+          <button class="copy" id="encode-copy" type="button" aria-label="Copy short link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <div class="error" id="encode-error" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span class="error-text"></span>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="decode-title">
+        <h2 class="card-title" id="decode-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9"/><polyline points="21 3 21 9 15 9"/></svg>
+          Expand a short link
+        </h2>
+        <form id="decode-form" class="row">
+          <input type="text" id="decode-input" placeholder="https://api.short-link.fun/GeAi9K" required autocomplete="off" spellcheck="false" aria-label="Short link to expand" />
+          <button type="submit" id="decode-btn" class="submit">
+            <span class="label">Expand</span>
+            <span class="spinner" aria-hidden="true"></span>
+          </button>
+        </form>
+        <div class="result" id="decode-result" role="status" aria-live="polite">
+          <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <a id="decode-link" href="#" target="_blank" rel="noopener"></a>
+          <button class="copy" id="decode-copy" type="button" aria-label="Copy original URL">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <span class="copy-label">Copy</span>
+          </button>
+        </div>
+        <div class="error" id="decode-error" role="alert">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span class="error-text"></span>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===== Features ===== -->
+    <section id="features" class="block">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">Why ShortLink</span>
+          <h2 class="section-title">Simple by design</h2>
+          <p>Everything you need to shorten and resolve links — nothing you don't.</p>
+        </div>
+        <div class="grid">
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+            <h3>Instant &amp; lightweight</h3>
+            <p>A single Go binary with no heavy framework. Links are generated and resolved in milliseconds.</p>
+          </article>
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <h3>Private by default</h3>
+            <p>No account, no cookies, no third-party trackers. We only store the URL and its short code.</p>
+          </article>
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a3 3 0 0 0-6 0v4"/><rect x="2" y="9" width="20" height="13" rx="2"/></svg></div>
+            <h3>Stable, non-guessable codes</h3>
+            <p>A reversible Feistel permutation produces clean 6-character base62 codes that never collide.</p>
+          </article>
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <h3>Links that last</h3>
+            <p>Codes are stored persistently and survive restarts — the same URL always maps to the same link.</p>
+          </article>
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <h3>Open API</h3>
+            <p>Plain JSON endpoints at <code>api.short-link.fun</code>. Integrate from any language in a few lines.</p>
+          </article>
+          <article class="feature">
+            <div class="ficon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></div>
+            <h3>Open source</h3>
+            <p>The full implementation is on GitHub — audit it, self-host it, or contribute.</p>
+          </article>
+        </div>
       </div>
-      <div class="error" id="decode-error"></div>
     </section>
 
-    <footer>
-      <p>Free &amp; open. API at <code>api.short-link.fun</code> · <a href="https://github.com/TyronNA/short-link" rel="noopener">Source</a></p>
-    </footer>
+    <!-- ===== How it works ===== -->
+    <section id="how" class="block">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="eyebrow">How it works</span>
+          <h2 class="section-title">Three steps, no setup</h2>
+          <p>Paste a link, get a short code, share it anywhere.</p>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <div class="num">1</div>
+            <h3>Paste your URL</h3>
+            <p>Drop any long link into the shortener above. We validate it before doing anything.</p>
+          </li>
+          <li class="step">
+            <div class="num">2</div>
+            <h3>Get a 6-char code</h3>
+            <p>We assign an ID, scramble it with a Feistel permutation, and encode it as base62.</p>
+          </li>
+          <li class="step">
+            <div class="num">3</div>
+            <h3>Share &amp; resolve</h3>
+            <p>Visiting the short link redirects instantly. Paste it back to decode the original URL.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
   </main>
 
-  <script>
-    // API base. Override at deploy time if the API host changes.
-    const API_BASE = "https://api.short-link.fun";
+  <footer>
+    <div class="wrap">
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="/faq">FAQ</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a href="https://github.com/TyronNA/short-link" rel="noopener">GitHub</a>
+      </nav>
+      <p class="meta">Free &amp; open source. API at <code>api.short-link.fun</code> · © 2026 ShortLink</p>
+    </div>
+  </footer>
 
-    async function callJSON(path, body) {
-      const res = await fetch(API_BASE + path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      let data = {};
-      try { data = await res.json(); } catch (_) {}
-      if (!res.ok) throw new Error(data.error || ("request failed (" + res.status + ")"));
-      return data;
-    }
-
-    function show(el) { el.classList.add("show"); }
-    function hide(el) { el.classList.remove("show"); }
-
-    function wire(formId, btnId, inputId, resultId, linkId, copyId, errId, run) {
-      const form = document.getElementById(formId);
-      const btn = document.getElementById(btnId);
-      const input = document.getElementById(inputId);
-      const result = document.getElementById(resultId);
-      const link = document.getElementById(linkId);
-      const copy = document.getElementById(copyId);
-      const err = document.getElementById(errId);
-
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        hide(result); hide(err); err.textContent = "";
-        btn.disabled = true;
-        try {
-          const url = await run(input.value.trim());
-          link.href = url;
-          link.textContent = url;
-          show(result);
-        } catch (ex) {
-          err.textContent = ex.message;
-          show(err);
-        } finally {
-          btn.disabled = false;
-        }
-      });
-
-      copy.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(link.textContent);
-          copy.textContent = "Copied";
-          setTimeout(() => (copy.textContent = "Copy"), 1500);
-        } catch (_) {}
-      });
-    }
-
-    wire("encode-form", "encode-btn", "encode-input", "encode-result", "encode-link", "encode-copy", "encode-error",
-      async (url) => (await callJSON("/encode", { url })).short_url);
-
-    wire("decode-form", "decode-btn", "decode-input", "decode-result", "decode-link", "decode-copy", "decode-error",
-      async (shortURL) => (await callJSON("/decode", { short_url: shortURL })).original_url);
-  </script>
+  <script src="assets/app.js" defer></script>
 </body>
 </html>
