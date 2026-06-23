@@ -127,13 +127,32 @@ h1 .mark { background: linear-gradient(180deg, var(--accent), var(--accent-stron
 
 /* ---- Tool ---- */
 .tool {
-  max-width: 920px; margin: 0 auto;
-  display: grid; gap: 18px; grid-template-columns: 1fr 1fr; align-items: start;
+  max-width: var(--readw); margin: 0 auto;
+  display: flex; flex-direction: column; gap: 14px;
 }
-.tool .card { margin-bottom: 0; height: 100%; }
-@media (max-width: 760px) {
-  .tool { grid-template-columns: 1fr; max-width: var(--readw); }
+.tool .card { margin-bottom: 0; }
+
+/* ---- Expand: secondary disclosure (preview a short link) ---- */
+.expand-tool {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: rgba(255,255,255,0.015);
 }
+.expand-tool > summary {
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  list-style: none; padding: 13px 16px; color: var(--muted);
+  font-size: 0.9rem; user-select: none;
+}
+.expand-tool > summary::-webkit-details-marker { display: none; }
+.expand-tool > summary:hover { color: var(--text); }
+.expand-tool > summary > svg { width: 16px; height: 16px; opacity: 0.8; flex: none; }
+.expand-tool > summary > span { flex: 1; }
+.expand-tool > summary strong { color: var(--text); font-weight: 600; }
+.expand-tool > summary .chevron { transition: transform 0.18s ease; }
+.expand-tool[open] > summary .chevron { transform: rotate(180deg); }
+.expand-tool > form,
+.expand-tool > .result,
+.expand-tool > .error { margin-left: 16px; margin-right: 16px; }
+.expand-tool > *:last-child { margin-bottom: 16px; }
 
 /* ---- Scroll cue ---- */
 .scroll-cue {
