@@ -102,6 +102,7 @@ Request: `{"short_url": "<full short URL or bare code>"}`
 | **SQL injection** | All queries are parameterized; no string concatenation. Verified by a test that stores `'); DROP TABLE links;--`. | [store.go](internal/store/store.go), [store_test.go](internal/store/store_test.go) |
 | **DoS via large body** | `http.MaxBytesReader` caps bodies at 16 KiB → `413`. | [handler.go](internal/handler/handler.go) |
 | **DoS via slow/hung clients** | Server has `ReadTimeout`, `ReadHeaderTimeout`, `WriteTimeout`, `IdleTimeout`. | [main.go](cmd/server/main.go) |
+| **Abuse / flooding (request volume)** | Per-client token-bucket rate limiter (default 20 req/s, burst 40) → `429` + `Retry-After`. Keys on the real client IP via `X-Forwarded-For` when `TRUST_PROXY` is set (behind a proxy). `/health` is exempt. | [ratelimit.go](internal/handler/ratelimit.go) |
 | **Oversized / junk URLs** | URL length capped at 2048; scheme restricted to `http`/`https`; host required. | `validateURL` |
 | **Header / log injection (CRLF)** | URLs containing control characters (incl. `\r`, `\n`) are rejected before storage or logging. | `validateURL` |
 | **Code enumeration / scraping** | Feistel permutation makes codes non-sequential; you cannot guess neighbours from one code. | [shortener.go](internal/shortener/shortener.go) |
@@ -111,8 +112,9 @@ Request: `{"short_url": "<full short URL or bare code>"}`
 | **Secret in code** | Feistel key comes from the `FEISTEL_KEY` env var, not source. | [main.go](cmd/server/main.go) |
 
 **Known/accepted:** like every URL shortener, `/decode` and `GET /{code}` are **open
-redirects** by design — that is the product's purpose. A production deployment would add a
-safe-browsing/host allow-list and rate limiting (out of scope here; see Scalability).
+redirects** by design — that is the product's purpose. A production deployment would
+additionally add a safe-browsing / host allow-list to block links to known-malicious hosts
+(not implemented here).
 
 ## Scalability & the "collision problem"
 
@@ -132,9 +134,10 @@ The real scaling questions are:
    length to 7 (`62⁷ ≈ 3.5 trillion`) — widen the Feistel domain and the pad length. Existing
    6-char codes keep decoding.
 
-3. **Read scaling.** Decoding is pure computation plus one indexed primary-key lookup. Reads
-   scale with read replicas / a cache (e.g. Redis) in front of the store; the hot path is the
-   redirect.
+3. **Read scaling.** Decoding is pure computation plus one indexed primary-key lookup. On a
+   single node, SQLite runs in **WAL mode** so reads (redirects) never block the writer and
+   vice versa. Beyond one node, reads scale with read replicas / a cache (e.g. Redis) in front
+   of the store; the hot path is the redirect.
 
 4. **Storage.** SQLite is ideal for a single-node demo. At scale, move `id ↔ url` to a
    horizontally-partitioned store (sharded by ID range or a managed KV/SQL service); the

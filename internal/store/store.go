@@ -35,9 +35,17 @@ type Store struct {
 // Open opens (creating if necessary) the SQLite database at path and ensures
 // the schema exists. Pass ":memory:" for an ephemeral database in tests.
 func Open(path string) (*Store, error) {
-	// busy_timeout avoids spurious "database is locked" errors under
-	// concurrent writers; foreign_keys is on for good hygiene.
-	dsn := fmt.Sprintf("file:%s?_pragma=busy_timeout(5000)&_pragma=foreign_keys(1)", path)
+	// Pragmas, in order:
+	//   journal_mode(WAL)   — readers don't block the single writer (and vice
+	//                         versa), which is what makes concurrent encode +
+	//                         redirect traffic safe on one node. WAL persists on
+	//                         the file; it is a no-op for ":memory:".
+	//   busy_timeout(5000)  — a writer that still finds the DB locked retries for
+	//                         up to 5s instead of failing immediately.
+	//   synchronous(NORMAL) — the recommended durability level under WAL: safe
+	//                         across app crashes, fsync only at checkpoints.
+	//   foreign_keys(1)     — good hygiene.
+	dsn := fmt.Sprintf("file:%s?_pragma=journal_mode(WAL)&_pragma=busy_timeout(5000)&_pragma=synchronous(NORMAL)&_pragma=foreign_keys(1)", path)
 	db, err := sql.Open("sqlite", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("open db: %w", err)

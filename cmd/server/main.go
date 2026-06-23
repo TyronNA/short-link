@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strconv"
 	"strings"
 	"syscall"
 	"time"
@@ -27,6 +28,9 @@ type config struct {
 	baseURL     string
 	feistelKey  uint64
 	corsOrigins []string
+	rateRPS     float64
+	rateBurst   float64
+	trustProxy  bool
 }
 
 func loadConfig() config {
@@ -37,7 +41,32 @@ func loadConfig() config {
 		baseURL:     env("BASE_URL", "http://localhost:"+port),
 		feistelKey:  deriveKey(env("FEISTEL_KEY", "shortlink-default-key")),
 		corsOrigins: splitCSV(env("CORS_ALLOWED_ORIGINS", "")),
+		rateRPS:     envFloat("RATE_LIMIT_RPS", 20),
+		rateBurst:   envFloat("RATE_LIMIT_BURST", 40),
+		trustProxy:  envBool("TRUST_PROXY", false),
 	}
+}
+
+// envFloat reads a float env var, falling back to def on absence or parse error.
+func envFloat(key string, def float64) float64 {
+	if v, ok := os.LookupEnv(key); ok && v != "" {
+		if f, err := strconv.ParseFloat(v, 64); err == nil {
+			return f
+		}
+		log.Printf("config: %s=%q is not a number; using default %v", key, v, def)
+	}
+	return def
+}
+
+// envBool reads a boolean env var (1/t/true/...), falling back to def otherwise.
+func envBool(key string, def bool) bool {
+	if v, ok := os.LookupEnv(key); ok && v != "" {
+		if b, err := strconv.ParseBool(v); err == nil {
+			return b
+		}
+		log.Printf("config: %s=%q is not a bool; using default %v", key, v, def)
+	}
+	return def
 }
 
 // splitCSV splits a comma-separated env value into trimmed, non-empty entries.
@@ -83,9 +112,18 @@ func run() error {
 	codec := shortener.New(cfg.feistelKey)
 	h := handler.New(st, codec, cfg.baseURL)
 
+	limiter := handler.NewRateLimiter(handler.RateLimiterConfig{
+		RPS:        cfg.rateRPS,
+		Burst:      cfg.rateBurst,
+		TrustProxy: cfg.trustProxy,
+	})
+	defer limiter.Stop()
+
+	// CORS is outermost so preflight (OPTIONS) is answered before — and is not
+	// charged against — the rate limiter.
 	srv := &http.Server{
 		Addr:              ":" + cfg.port,
-		Handler:           handler.CORS(h.Routes(), cfg.corsOrigins),
+		Handler:           handler.CORS(limiter.Middleware(h.Routes()), cfg.corsOrigins),
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 5 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -95,7 +133,8 @@ func run() error {
 	// Run the server in a goroutine so main can wait for a shutdown signal.
 	serverErr := make(chan error, 1)
 	go func() {
-		log.Printf("listening on %s (base_url=%s, db=%s, cors=%v)", srv.Addr, cfg.baseURL, cfg.dbPath, cfg.corsOrigins)
+		log.Printf("listening on %s (base_url=%s, db=%s, cors=%v, rate=%.0f/s burst=%.0f trust_proxy=%t)",
+			srv.Addr, cfg.baseURL, cfg.dbPath, cfg.corsOrigins, cfg.rateRPS, cfg.rateBurst, cfg.trustProxy)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			serverErr <- err
 		}
