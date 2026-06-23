@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"sync"
 	"testing"
 
 	"github.com/tyronnguyen/short-link/internal/handler"
@@ -23,12 +24,18 @@ func startServer(t *testing.T, dbPath string) (*httptest.Server, func()) {
 		t.Fatalf("open store: %v", err)
 	}
 	codec := shortener.New(0x5151515151)
-	srv := httptest.NewServer(handler.New(st, codec, "").Routes())
-	// Rebuild handler with the real base URL now that we know the address.
+	// NewUnstartedServer lets us learn the listen address (srv.URL) before
+	// building the handler, so the returned short URLs carry the real base URL.
+	srv := httptest.NewUnstartedServer(nil)
+	srv.Start()
 	srv.Config.Handler = handler.New(st, codec, srv.URL).Routes()
+
+	var once sync.Once
 	cleanup := func() {
-		srv.Close()
-		st.Close()
+		once.Do(func() {
+			srv.Close()
+			st.Close()
+		})
 	}
 	return srv, cleanup
 }
@@ -107,13 +114,13 @@ func TestFullFlow(t *testing.T) {
 		t.Fatalf("idempotency: %q != %q", enc2.ShortURL, enc.ShortURL)
 	}
 
-	// 6. Unknown code → 404.
+	// 5. Unknown code → 404.
 	resp, _ = postJSON(t, srv.URL+"/decode", map[string]string{"short_url": "ZzZzZz"})
 	if resp.StatusCode != http.StatusNotFound {
 		t.Fatalf("unknown code status = %d, want 404", resp.StatusCode)
 	}
 
-	// 5. Restart: close server+store, reopen the SAME db file, decode again.
+	// 6. Restart: close server+store, reopen the SAME db file, decode again.
 	cleanup()
 	srv2, cleanup2 := startServer(t, dbPath)
 	defer cleanup2()
