@@ -57,6 +57,20 @@ export default {
     }
 
     // Landing page and any other static asset.
-    return env.ASSETS.fetch(request);
+    const asset = await env.ASSETS.fetch(request);
+
+    // A miss here is served as 404.html by `not_found_handling = "404-page"`,
+    // which carries `cache-control: public, must-revalidate`. The edge caches
+    // that against the path (keyed by Accept), so a code that 404s once — e.g.
+    // visited before the BE knew it — gets a cached 404 that survives even
+    // after the code becomes valid, because the cached HIT short-circuits this
+    // Worker entirely (no cfWorker in server-timing). Stamp `no-store` on every
+    // 404 so the edge can never cache one. Real assets (200/304) stay cacheable.
+    if (asset.status === 404) {
+      const headers = new Headers(asset.headers);
+      headers.set("Cache-Control", "no-store");
+      return new Response(asset.body, { status: 404, headers });
+    }
+    return asset;
   },
 };
