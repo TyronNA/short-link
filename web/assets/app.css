@@ -88,8 +88,17 @@ section { scroll-margin-top: 80px; }
 h2.section-title { font-size: clamp(1.5rem, 4vw, 2rem); margin: 0 0 10px; letter-spacing: -0.02em; }
 .section-head p { color: var(--muted); margin: 0; font-size: 1.04rem; }
 
+/* ---- Fold: hero + tool centered in the first screen ---- */
+.fold {
+  min-height: calc(100svh - 55px); /* viewport minus sticky nav */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(16px, 3vh, 32px) 0 clamp(20px, 4vh, 40px);
+}
+
 /* ---- Hero ---- */
-.hero { text-align: center; padding: clamp(48px, 8vw, 84px) 0 clamp(24px, 4vw, 36px); }
+.hero { text-align: center; padding: 0 0 clamp(20px, 3vh, 32px); }
 .logo-mark {
   width: 56px; height: 56px; display: inline-grid; place-items: center; font-size: 28px;
   border-radius: 16px; margin-bottom: 18px;
@@ -117,7 +126,24 @@ h1 .mark { background: linear-gradient(180deg, var(--accent), var(--accent-stron
 .breadcrumb a:hover { text-decoration: underline; }
 
 /* ---- Tool ---- */
-.tool { max-width: var(--readw); margin: clamp(28px, 5vw, 44px) auto 0; }
+.tool {
+  max-width: 920px; margin: 0 auto;
+  display: grid; gap: 18px; grid-template-columns: 1fr 1fr; align-items: start;
+}
+.tool .card { margin-bottom: 0; height: 100%; }
+@media (max-width: 760px) {
+  .tool { grid-template-columns: 1fr; max-width: var(--readw); }
+}
+
+/* ---- Scroll cue ---- */
+.scroll-cue {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 2px;
+  margin: clamp(20px, 3vh, 32px) auto 0; color: var(--muted-dim); text-decoration: none;
+  font-size: 0.78rem; letter-spacing: 0.04em; transition: color 0.15s ease;
+}
+.scroll-cue:hover { color: var(--text); }
+.scroll-cue svg { width: 20px; height: 20px; animation: bob 1.8s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
 
 .card {
   position: relative;
